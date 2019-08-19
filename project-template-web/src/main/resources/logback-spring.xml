@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xml>
+<configuration>
+	<springProperty scope="context" name="appName" source="app.name"/>
+	<springProperty scope="context" name="logLevel" source="app.log.level"/>
+	<springProperty scope="context" name="appLogHome" source="app.log.home"/>
+	<property name="logHome" value="${appLogHome}/${appName}" />
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="appAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${logHome}/${appName}.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}/${appName}.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="warnAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">  
+            <level>WARN</level>  
+        </filter>
+		<file>${logHome}/${appName}.warn.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}/${appName}.warn.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<maxHistory>10</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	
+	<!-- This is used to record the log for the third party plugin, like Spring, ibatis, hibernate and so on -->
+    <appender name="3rdPartyAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${logHome}/${appName}.3rdParty.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logHome}/${appName}.3rdParty.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+        </rollingPolicy>
+        <encoder>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${appName}] [%-3p] [%t] %c - %m%n</pattern>
+            <charset>UTF-8</charset>
+        </encoder>
+    </appender>
+
+    <logger name="com.ibatis" addtivity="false" level="INFO">
+        <appender-ref ref="3rdPartyAppender"/>
+    </logger>
+
+    <logger name="org.springframework" addtivity="false" level="WARN">
+        <appender-ref ref="3rdPartyAppender"/>
+    </logger>
+
+	<root level="${logLevel}">
+		<appender-ref ref="appAppender" />
+        <appender-ref ref="warnAppender"/>
+		<appender-ref ref="console" />
+	</root>
+</configuration>

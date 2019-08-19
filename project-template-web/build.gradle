@@ -1,0 +1,92 @@
+buildscript {
+	repositories {
+		maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+	}
+	dependencies {
+		classpath("org.springframework.boot:spring-boot-gradle-plugin:1.5.4.RELEASE")
+	}
+}
+
+apply plugin: "java"
+apply plugin: "org.springframework.boot"
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+version = "1.0.0"
+
+repositories {
+	maven { url "http://maven.aliyun.com/nexus/content/groups/public/" }
+}
+
+configurations {
+	compile.exclude module: "hibernate-validator"
+}
+
+dependencies {
+	// spring boot
+	compile "org.springframework.boot:spring-boot-starter-web"
+	compile "org.springframework.boot:spring-boot-starter-freemarker"
+	compile "com.googlecode.rapid-framework:rapid-core:4.0.5"
+	compile "org.mybatis.spring.boot:mybatis-spring-boot-starter:1.3.0"
+	compile "tk.mybatis:mapper-spring-boot-starter:2.1.5"
+	compile "com.github.pagehelper:pagehelper:4.1.1"
+	compile "com.alibaba:druid:1.1.10"
+	compile "org.xerial:sqlite-jdbc:3.7.2"
+	// thirdparty
+	compile "org.slf4j:slf4j-api"
+	compile "dom4j:dom4j"
+	compile "commons-io:commons-io:2.4"
+	compile "org.apache.commons:commons-lang3:3.5"
+	compile "commons-lang:commons-lang:2.6"
+	compile "com.google.code.gson:gson"
+	compile "com.alibaba:fastjson:1.2.28"
+	compile "com.google.guava:guava:19.0"
+	compile "org.apache.poi:poi:4.1.0"
+	compile "org.apache.poi:poi-excelant:4.1.0"
+}
+
+dependencies {
+	testCompile "org.springframework.boot:spring-boot-starter-test"
+}
+
+tasks.withType(JavaCompile) {  
+	options.encoding = "UTF-8"  
+}
+
+processResources {
+	from("src/main/java") {
+		include "**/*.xml"
+	}
+}
+
+jar {
+	archiveName = "project-framework.jar"
+	manifest {
+		def mainClass = "com.eros.demo.Application"
+		def manifestClasspath = configurations.runtime.collect { "../lib/" + it.getName() }.join(" ")
+		attributes("Class-Path": manifestClasspath, "Main-Class": mainClass)
+	}
+}
+
+task packageJar(type: Copy) {
+	into("apps") {
+		from jar
+	}
+	into("lib") {
+		from configurations.runtime
+	}
+	into("db") {
+		from file("db")
+	}
+	into("config") {
+		from file("config")
+	}
+	into("webapp") {
+		from file("webapp")
+	}
+	into("bin") {
+		from file("script")
+	}
+	destinationDir = file "${buildDir}/toDeploy"
+}

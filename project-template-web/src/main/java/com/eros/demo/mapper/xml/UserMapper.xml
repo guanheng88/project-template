@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.eros.demo.mapper.UserMapper" >
+
+	<resultMap id="userMap" type="User">
+		<id column="user_id" property="id" />
+		<result column="user_name" property="name" />
+		<result column="user_age" property="age" />
+	</resultMap>
+	
+	<sql id="userColumn">
+		u.id	user_id,
+		u.name	user_name,
+		u.age	user_age
+	</sql>
+    
+    <select id="fetchUsers" resultMap="userMap">
+		select
+			<include refid="userColumn" />
+		from user u
+		where 1 = 1
+		<if test="_parameter != null">
+			<if test="name != null and name != ''">and u.name like '%'||#{name}||'%'</if>
+		</if>
+		order by u.id
+	</select>
+
+</mapper>

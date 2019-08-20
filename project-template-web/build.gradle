@@ -61,7 +61,7 @@ processResources {
 }
 
 jar {
-	archiveName = "project-framework.jar"
+	archiveName = project.name + ".jar"
 	manifest {
 		def mainClass = "com.eros.demo.Application"
 		def manifestClasspath = configurations.runtime.collect { "../lib/" + it.getName() }.join(" ")

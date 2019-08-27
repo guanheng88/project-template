@@ -36,7 +36,7 @@
                 paginationLayer.jqPaginator({
                     currentPage: 1,
                     pageSize: 10,
-                    totalCounts: 1,
+                    totalCounts: 135,
                     visiblePages: 7,
                     first: "<li class='page-item'><a class='page-link' href='javascript:;'>首页</a></li>",
                     prev: "<li class='page-item'><a class='page-link' href='javascript:;'>上一页</a></li>",
@@ -66,6 +66,13 @@
                         totalCounts: 40
                     });
                 };
+
+                $scope.servers = [
+                    { id: 1, name: "server1" },
+                    { id: 2, name: "server2" },
+                    { id: 3, name: "server3" }
+                ];
+                $scope.serverId = 2;
             });
         </script>
     </head>
@@ -137,6 +144,7 @@
                         <p><input type="text" ng-model="testUser.testName" /></p>
                         <p>{{testUser.testName}}</p>
                         <p><button ng-click="testNameBtnClick(testUser.testName)">确定</button></p>
+                        <p><select ng-model="serverId" ng-options="server.id as server.name for server in servers"></select></p>
                     </div>
                     <ul id="layer-pagination" class="pagination pagination-sm"></ul>
                     <div><@block name="body">父模板的 body</@block></div>

@@ -176,11 +176,11 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-jar-plugin</artifactId>
 				<configuration>
-					<outputDirectory>${toDeploydir}/apps</outputDirectory>
+					<outputDirectory>${toDeploydir}</outputDirectory>
 					<archive>
 						<manifest>
 							<addClasspath>true</addClasspath>
-							<classpathPrefix>../lib/</classpathPrefix>
+							<classpathPrefix>./lib/</classpathPrefix>
 							<mainClass>com.eros.demo.Application</mainClass>
 						</manifest>
 					</archive>
@@ -249,7 +249,7 @@
 							<goal>copy-resources</goal>
 						</goals>
 						<configuration>
-							<outputDirectory>${toDeploydir}/bin</outputDirectory>
+							<outputDirectory>${toDeploydir}</outputDirectory>
 							<resources>
 								<resource>
 									<directory>script</directory>

@@ -18,7 +18,7 @@
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${logHome}/${appName}.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<!-- keep 1 days worth of history -->
-			<maxHistory>10</maxHistory>
+			<maxHistory>15</maxHistory>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
@@ -27,14 +27,32 @@
 	</appender>
 
 	<appender name="warnAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
-		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">  
-            <level>WARN</level>  
-        </filter>
+		<filter class="ch.qos.logback.classic.filter.LevelFilter">
+			<level>WARN</level>
+			<onMatch>ACCEPT</onMatch>
+			<onMismatch>DENY</onMismatch>
+		</filter>
 		<file>${logHome}/${appName}.warn.log</file>
 		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
 			<fileNamePattern>${logHome}/${appName}.warn.%d{yyyy-MM-dd}.log</fileNamePattern>
 			<!-- keep 1 days worth of history -->
-			<maxHistory>10</maxHistory>
+			<maxHistory>15</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
+			<charset>UTF-8</charset>
+		</encoder>
+	</appender>
+	
+	<appender name="errorAppender" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">  
+            <level>ERROR</level>  
+        </filter>
+		<file>${logHome}/${appName}.error.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${logHome}/${appName}.error.%d{yyyy-MM-dd}.log</fileNamePattern>
+			<!-- keep 1 days worth of history -->
+			<maxHistory>15</maxHistory>
 		</rollingPolicy>
 		<encoder>
 			<pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
@@ -47,9 +65,11 @@
         <file>${logHome}/${appName}.3rdParty.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${logHome}/${appName}.3rdParty.log.%d{yyyy-MM-dd}.log</fileNamePattern>
+            <!-- keep 1 days worth of history -->
+			<maxHistory>15</maxHistory>
         </rollingPolicy>
         <encoder>
-            <pattern>%d{yyyy-MM-dd HH:mm:ss.SSS} [${appName}] [%-3p] [%t] %c - %m%n</pattern>
+            <pattern>%d{yyyy-MM-dd HH:mm:ss} [%level] [%t] %c - %msg%n</pattern>
             <charset>UTF-8</charset>
         </encoder>
     </appender>
@@ -65,6 +85,7 @@
 	<root level="${logLevel}">
 		<appender-ref ref="appAppender" />
         <appender-ref ref="warnAppender"/>
+        <appender-ref ref="errorAppender"/>
 		<appender-ref ref="console" />
 	</root>
 </configuration>
